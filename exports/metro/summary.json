@@ -1,0 +1,43 @@
+{
+  "profile": "metro",
+  "rootPrefix": "172.16.0.0/16",
+  "resiliency": true,
+  "cloud": null,
+  "totalDecisions": 22,
+  "totalSubnets": 10,
+  "totalHostsRequested": 559,
+  "totalUsableAddresses": 641,
+  "efficiencyPercent": 87.2,
+  "links": [
+    {
+      "name": "FinTech-HQ-Branch-East",
+      "distanceM": 18500,
+      "media": "OS2 SMF",
+      "standard": "10GBASE-ER",
+      "transceiver": "ER",
+      "marginDb": 1.58,
+      "propagationDelayUs": 92.5,
+      "wanCircuit": false
+    },
+    {
+      "name": "FinTech-HQ-Branch-West",
+      "distanceM": 32000,
+      "media": "OS2 SMF",
+      "standard": "10GBASE-ZR",
+      "transceiver": "ZR",
+      "marginDb": 10.4,
+      "propagationDelayUs": 160,
+      "wanCircuit": false
+    },
+    {
+      "name": "Branch-East-Branch-West",
+      "distanceM": 24000,
+      "media": "OS2 SMF",
+      "standard": "10GBASE-ZR",
+      "transceiver": "ZR",
+      "marginDb": 12.8,
+      "propagationDelayUs": 120,
+      "wanCircuit": false
+    }
+  ]
+}

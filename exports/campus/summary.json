@@ -1,0 +1,43 @@
+{
+  "profile": "campus",
+  "rootPrefix": "10.10.0.0/16",
+  "resiliency": true,
+  "cloud": null,
+  "totalDecisions": 23,
+  "totalSubnets": 14,
+  "totalHostsRequested": 1609,
+  "totalUsableAddresses": 2329,
+  "efficiencyPercent": 69.1,
+  "links": [
+    {
+      "name": "Admin-Hall-Science-Complex",
+      "distanceM": 180,
+      "media": "OM4 MMF",
+      "standard": "10GBASE-SR",
+      "transceiver": null,
+      "marginDb": null,
+      "propagationDelayUs": 0.9,
+      "wanCircuit": false
+    },
+    {
+      "name": "Admin-Hall-Residential-Quad",
+      "distanceM": 360,
+      "media": "OM4 MMF",
+      "standard": "10GBASE-SR",
+      "transceiver": null,
+      "marginDb": null,
+      "propagationDelayUs": 1.8,
+      "wanCircuit": false
+    },
+    {
+      "name": "Science-Complex-Residential-Quad",
+      "distanceM": 250,
+      "media": "OM4 MMF",
+      "standard": "10GBASE-SR",
+      "transceiver": null,
+      "marginDb": null,
+      "propagationDelayUs": 1.25,
+      "wanCircuit": false
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+! ===== DEVICE: RTR-BENGALURU =====
+!
+hostname RTR-BENGALURU
+no ip domain-lookup
+!
+! --- VLAN Configuration (IEEE 802.1Q) ---
+vlan 301
+ name Bengaluru-IoT-Scanners
+vlan 302
+ name Bengaluru-Servers
+vlan 303
+ name Bengaluru-Mgmt
+vlan 999
+ name NATIVE
+!
+! --- Spanning Tree (IEEE 802.1w RSTP) ---
+spanning-tree mode rapid-pvst
+!
+! --- Layer 3 Routing ---
+ip routing
+!
+! --- SVI Interfaces ---
+interface Vlan301
+ description Bengaluru-IoT-Scanners SVI
+ ip address 10.100.12.1 255.255.254.0
+ no shutdown
+!
+interface Vlan302
+ description Bengaluru-Servers SVI
+ ip address 10.100.14.33 255.255.255.224
+ no shutdown
+!
+interface Vlan303
+ description Bengaluru-Mgmt SVI
+ ip address 10.100.14.1 255.255.255.224
+ no shutdown
+!
+! --- Access Ports ---
+interface GigabitEthernet1/0/14
+ description Bengaluru-IoT-Scanners access
+ switchport mode access
+ switchport access vlan 301
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/15
+ description Bengaluru-Servers access
+ switchport mode access
+ switchport access vlan 302
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/16
+ description Bengaluru-Mgmt access
+ switchport mode access
+ switchport access vlan 303
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+! --- Routed Point-to-Point Ports ---
+interface GigabitEthernet0/1
+ description P2P to Delhi-Hub
+ no switchport
+ ip address 10.100.20.1 255.255.255.254
+ no shutdown
+!
+! --- Loopback Interfaces ---
+interface Loopback0
+ description Router-ID RTR-BENGALURU
+ ip address 10.100.20.6 255.255.255.255
+ no shutdown
+!
+! --- OSPF Configuration (RFC 2328) ---
+router ospf 1
+ router-id 10.100.20.6
+ network 10.100.12.0 0.0.1.255 area 2
+ network 10.100.14.32 0.0.0.31 area 2
+ network 10.100.14.0 0.0.0.31 area 2
+ network 10.100.20.0 0.0.0.1 area 0
+ network 10.100.20.6 0.0.0.0 area 2
+ passive-interface Vlan301
+ passive-interface Vlan302
+ passive-interface Vlan303
+!
+end

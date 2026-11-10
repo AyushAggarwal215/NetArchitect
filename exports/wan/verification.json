@@ -1,0 +1,25 @@
+{
+  "profile": "wan",
+  "timestamp": "2026-11-10T09:33:46.872Z",
+  "status": "PASS",
+  "devicesChecked": [
+    "RTR-DELHI",
+    "RTR-MUMBAI",
+    "RTR-BENGALURU",
+    "RTR-CHENNAI"
+  ],
+  "totalDevices": 4,
+  "totalLinesGenerated": 400,
+  "securityChecks": {
+    "strictAllowlist": true,
+    "isolatedNativeVlan999": true,
+    "trunkVlanPruning": true,
+    "portFastEnabled": true,
+    "bpduGuardEnabled": true,
+    "passiveInterfacesEnforced": true,
+    "zeroDuplicateIps": true,
+    "zeroLeakedSecrets": true
+  },
+  "errors": [],
+  "warnings": []
+}

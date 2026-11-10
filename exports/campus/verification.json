@@ -1,0 +1,24 @@
+{
+  "profile": "campus",
+  "timestamp": "2026-11-10T09:33:46.668Z",
+  "status": "PASS",
+  "devicesChecked": [
+    "CORE-ADMIN",
+    "DIST-SCIENCE",
+    "DIST-RESI"
+  ],
+  "totalDevices": 3,
+  "totalLinesGenerated": 273,
+  "securityChecks": {
+    "strictAllowlist": true,
+    "isolatedNativeVlan999": true,
+    "trunkVlanPruning": true,
+    "portFastEnabled": true,
+    "bpduGuardEnabled": true,
+    "passiveInterfacesEnforced": true,
+    "zeroDuplicateIps": true,
+    "zeroLeakedSecrets": true
+  },
+  "errors": [],
+  "warnings": []
+}

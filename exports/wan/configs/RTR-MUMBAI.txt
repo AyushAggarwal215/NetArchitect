@@ -1,0 +1,88 @@
+! ===== DEVICE: RTR-MUMBAI =====
+!
+hostname RTR-MUMBAI
+no ip domain-lookup
+!
+! --- VLAN Configuration (IEEE 802.1Q) ---
+vlan 201
+ name Mumbai-IoT-Scanners
+vlan 202
+ name Mumbai-Servers
+vlan 203
+ name Mumbai-Mgmt
+vlan 999
+ name NATIVE
+!
+! --- Spanning Tree (IEEE 802.1w RSTP) ---
+spanning-tree mode rapid-pvst
+!
+! --- Layer 3 Routing ---
+ip routing
+!
+! --- SVI Interfaces ---
+interface Vlan201
+ description Mumbai-IoT-Scanners SVI
+ ip address 10.100.16.1 255.255.254.0
+ no shutdown
+!
+interface Vlan202
+ description Mumbai-Servers SVI
+ ip address 10.100.18.33 255.255.255.224
+ no shutdown
+!
+interface Vlan203
+ description Mumbai-Mgmt SVI
+ ip address 10.100.18.1 255.255.255.224
+ no shutdown
+!
+! --- Access Ports ---
+interface GigabitEthernet1/0/10
+ description Mumbai-IoT-Scanners access
+ switchport mode access
+ switchport access vlan 201
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/11
+ description Mumbai-Servers access
+ switchport mode access
+ switchport access vlan 202
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/12
+ description Mumbai-Mgmt access
+ switchport mode access
+ switchport access vlan 203
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+! --- Routed Point-to-Point Ports ---
+interface GigabitEthernet0/1
+ description P2P to Delhi-Hub
+ no switchport
+ ip address 10.100.20.5 255.255.255.254
+ no shutdown
+!
+! --- Loopback Interfaces ---
+interface Loopback0
+ description Router-ID RTR-MUMBAI
+ ip address 10.100.20.9 255.255.255.255
+ no shutdown
+!
+! --- OSPF Configuration (RFC 2328) ---
+router ospf 1
+ router-id 10.100.20.9
+ network 10.100.16.0 0.0.1.255 area 1
+ network 10.100.18.32 0.0.0.31 area 1
+ network 10.100.18.0 0.0.0.31 area 1
+ network 10.100.20.4 0.0.0.1 area 0
+ network 10.100.20.9 0.0.0.0 area 1
+ passive-interface Vlan201
+ passive-interface Vlan202
+ passive-interface Vlan203
+!
+end

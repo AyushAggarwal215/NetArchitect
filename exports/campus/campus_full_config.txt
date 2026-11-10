@@ -1,0 +1,278 @@
+! ===== DEVICE: CORE-ADMIN =====
+!
+hostname CORE-ADMIN
+no ip domain-lookup
+!
+! --- VLAN Configuration (IEEE 802.1Q) ---
+vlan 10
+ name Admin-Staff
+vlan 20
+ name DataCenter-Servers
+vlan 30
+ name Network-Mgmt
+vlan 40
+ name CCTV-Security
+vlan 999
+ name NATIVE
+!
+! --- Spanning Tree (IEEE 802.1w RSTP) ---
+spanning-tree mode rapid-pvst
+spanning-tree vlan 10 priority 4096
+spanning-tree vlan 20 priority 4096
+spanning-tree vlan 30 priority 4096
+spanning-tree vlan 40 priority 4096
+!
+! --- Layer 3 Routing ---
+ip routing
+!
+! --- SVI Interfaces ---
+interface Vlan10
+ description Admin-Staff SVI
+ ip address 10.10.6.1 255.255.255.0
+ no shutdown
+!
+interface Vlan20
+ description DataCenter-Servers SVI
+ ip address 10.10.8.129 255.255.255.192
+ no shutdown
+!
+interface Vlan30
+ description Network-Mgmt SVI
+ ip address 10.10.8.193 255.255.255.192
+ no shutdown
+!
+interface Vlan40
+ description CCTV-Security SVI
+ ip address 10.10.9.1 255.255.255.224
+ no shutdown
+!
+! --- Access Ports ---
+interface GigabitEthernet1/0/11
+ description Admin-Staff access
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/21
+ description DataCenter-Servers access
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/31
+ description Network-Mgmt access
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/41
+ description CCTV-Security access
+ switchport mode access
+ switchport access vlan 40
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+! --- Routed Point-to-Point Ports ---
+interface GigabitEthernet0/1
+ description P2P to Science-Complex
+ no switchport
+ ip address 10.10.9.37 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/2
+ description P2P to Residential-Quad
+ no switchport
+ ip address 10.10.9.33 255.255.255.252
+ no shutdown
+!
+! --- Loopback Interfaces ---
+interface Loopback0
+ description Router-ID CORE-ADMIN
+ ip address 10.10.9.44 255.255.255.255
+ no shutdown
+!
+! --- OSPF Configuration (RFC 2328) ---
+router ospf 1
+ router-id 10.10.9.44
+ network 10.10.6.0 0.0.0.255 area 0
+ network 10.10.8.128 0.0.0.63 area 0
+ network 10.10.8.192 0.0.0.63 area 0
+ network 10.10.9.0 0.0.0.31 area 0
+ network 10.10.9.36 0.0.0.3 area 0
+ network 10.10.9.32 0.0.0.3 area 0
+ network 10.10.9.44 0.0.0.0 area 0
+ passive-interface Vlan10
+ passive-interface Vlan20
+ passive-interface Vlan30
+ passive-interface Vlan40
+!
+end
+
+
+! ===== DEVICE: DIST-SCIENCE =====
+!
+hostname DIST-SCIENCE
+no ip domain-lookup
+!
+! --- VLAN Configuration (IEEE 802.1Q) ---
+vlan 50
+ name Faculty-Offices
+vlan 60
+ name Research-Labs
+vlan 70
+ name Campus-Wi-Fi-APs
+vlan 999
+ name NATIVE
+!
+! --- Spanning Tree (IEEE 802.1w RSTP) ---
+spanning-tree mode rapid-pvst
+!
+! --- Layer 3 Routing ---
+ip routing
+!
+! --- SVI Interfaces ---
+interface Vlan50
+ description Faculty-Offices SVI
+ ip address 10.10.7.1 255.255.255.0
+ no shutdown
+!
+interface Vlan60
+ description Research-Labs SVI
+ ip address 10.10.4.1 255.255.254.0
+ no shutdown
+!
+interface Vlan70
+ description Campus-Wi-Fi-APs SVI
+ ip address 10.10.8.1 255.255.255.128
+ no shutdown
+!
+! --- Access Ports ---
+interface GigabitEthernet1/0/3
+ description Faculty-Offices access
+ switchport mode access
+ switchport access vlan 50
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/13
+ description Research-Labs access
+ switchport mode access
+ switchport access vlan 60
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/23
+ description Campus-Wi-Fi-APs access
+ switchport mode access
+ switchport access vlan 70
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ power inline auto
+ no shutdown
+!
+! --- Routed Point-to-Point Ports ---
+interface GigabitEthernet0/1
+ description P2P to Admin-Hall
+ no switchport
+ ip address 10.10.9.38 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/2
+ description P2P to Residential-Quad
+ no switchport
+ ip address 10.10.9.41 255.255.255.252
+ no shutdown
+!
+! --- Loopback Interfaces ---
+interface Loopback0
+ description Router-ID DIST-SCIENCE
+ ip address 10.10.9.46 255.255.255.255
+ no shutdown
+!
+! --- OSPF Configuration (RFC 2328) ---
+router ospf 1
+ router-id 10.10.9.46
+ network 10.10.7.0 0.0.0.255 area 0
+ network 10.10.4.0 0.0.1.255 area 0
+ network 10.10.8.0 0.0.0.127 area 0
+ network 10.10.9.36 0.0.0.3 area 0
+ network 10.10.9.40 0.0.0.3 area 0
+ network 10.10.9.46 0.0.0.0 area 0
+ passive-interface Vlan50
+ passive-interface Vlan60
+ passive-interface Vlan70
+!
+end
+
+
+! ===== DEVICE: DIST-RESI =====
+!
+hostname DIST-RESI
+no ip domain-lookup
+!
+! --- VLAN Configuration (IEEE 802.1Q) ---
+vlan 80
+ name Student-Dorms
+vlan 999
+ name NATIVE
+!
+! --- Spanning Tree (IEEE 802.1w RSTP) ---
+spanning-tree mode rapid-pvst
+!
+! --- Layer 3 Routing ---
+ip routing
+!
+! --- SVI Interfaces ---
+interface Vlan80
+ description Student-Dorms SVI
+ ip address 10.10.0.1 255.255.252.0
+ no shutdown
+!
+! --- Access Ports ---
+interface GigabitEthernet1/0/33
+ description Student-Dorms access
+ switchport mode access
+ switchport access vlan 80
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+! --- Routed Point-to-Point Ports ---
+interface GigabitEthernet0/1
+ description P2P to Admin-Hall
+ no switchport
+ ip address 10.10.9.34 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/2
+ description P2P to Science-Complex
+ no switchport
+ ip address 10.10.9.42 255.255.255.252
+ no shutdown
+!
+! --- Loopback Interfaces ---
+interface Loopback0
+ description Router-ID DIST-RESI
+ ip address 10.10.9.45 255.255.255.255
+ no shutdown
+!
+! --- OSPF Configuration (RFC 2328) ---
+router ospf 1
+ router-id 10.10.9.45
+ network 10.10.0.0 0.0.3.255 area 0
+ network 10.10.9.32 0.0.0.3 area 0
+ network 10.10.9.40 0.0.0.3 area 0
+ network 10.10.9.45 0.0.0.0 area 0
+ passive-interface Vlan80
+!
+end
+

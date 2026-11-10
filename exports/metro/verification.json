@@ -1,0 +1,24 @@
+{
+  "profile": "metro",
+  "timestamp": "2026-11-10T09:33:46.760Z",
+  "status": "PASS",
+  "devicesChecked": [
+    "RTR-FINTECH-HQ",
+    "RTR-BRANCH-EAST",
+    "RTR-BRANCH-WEST"
+  ],
+  "totalDevices": 3,
+  "totalLinesGenerated": 239,
+  "securityChecks": {
+    "strictAllowlist": true,
+    "isolatedNativeVlan999": true,
+    "trunkVlanPruning": true,
+    "portFastEnabled": true,
+    "bpduGuardEnabled": true,
+    "passiveInterfacesEnforced": true,
+    "zeroDuplicateIps": true,
+    "zeroLeakedSecrets": true
+  },
+  "errors": [],
+  "warnings": []
+}

@@ -1,0 +1,136 @@
+! ===== DEVICE: RTR-DELHI =====
+!
+hostname RTR-DELHI
+no ip domain-lookup
+!
+! --- VLAN Configuration (IEEE 802.1Q) ---
+vlan 101
+ name Delhi-IoT-Scanners
+vlan 102
+ name Delhi-Servers
+vlan 103
+ name Delhi-Mgmt
+vlan 999
+ name NATIVE
+!
+! --- Spanning Tree (IEEE 802.1w RSTP) ---
+spanning-tree mode rapid-pvst
+spanning-tree vlan 101 priority 4096
+spanning-tree vlan 102 priority 4096
+spanning-tree vlan 103 priority 4096
+!
+! --- Layer 3 Routing ---
+ip routing
+!
+! --- SVI Interfaces ---
+interface Vlan101
+ description Delhi-IoT-Scanners SVI
+ ip address 10.100.0.1 255.255.252.0
+ no shutdown
+!
+interface Vlan102
+ description Delhi-Servers SVI
+ ip address 10.100.4.33 255.255.255.224
+ no shutdown
+!
+interface Vlan103
+ description Delhi-Mgmt SVI
+ ip address 10.100.4.1 255.255.255.224
+ no shutdown
+!
+! --- Access Ports ---
+interface GigabitEthernet1/0/6
+ description Delhi-IoT-Scanners access
+ switchport mode access
+ switchport access vlan 101
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/7
+ description Delhi-Servers access
+ switchport mode access
+ switchport access vlan 102
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/8
+ description Delhi-Mgmt access
+ switchport mode access
+ switchport access vlan 103
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+! --- Routed Point-to-Point Ports ---
+interface GigabitEthernet0/1
+ description P2P to Mumbai-Logistics
+ no switchport
+ ip address 10.100.20.4 255.255.255.254
+ no shutdown
+!
+interface GigabitEthernet0/2
+ description P2P to Bengaluru-TechCenter
+ no switchport
+ ip address 10.100.20.0 255.255.255.254
+ no shutdown
+!
+interface GigabitEthernet0/3
+ description P2P to Chennai-Terminal
+ no switchport
+ ip address 10.100.20.2 255.255.255.254
+ no shutdown
+!
+! --- Loopback Interfaces ---
+interface Loopback0
+ description Router-ID RTR-DELHI
+ ip address 10.100.20.8 255.255.255.255
+ no shutdown
+!
+! --- OSPF Configuration (RFC 2328) ---
+router ospf 1
+ router-id 10.100.20.8
+ network 10.100.0.0 0.0.3.255 area 0
+ network 10.100.4.32 0.0.0.31 area 0
+ network 10.100.4.0 0.0.0.31 area 0
+ network 10.100.20.4 0.0.0.1 area 0
+ network 10.100.20.0 0.0.0.1 area 0
+ network 10.100.20.2 0.0.0.1 area 0
+ network 10.100.20.8 0.0.0.0 area 0
+ passive-interface Vlan101
+ passive-interface Vlan102
+ passive-interface Vlan103
+ area 1 range 10.100.16.0 255.255.252.0
+ area 2 range 10.100.12.0 255.255.252.0
+ area 3 range 10.100.8.0 255.255.252.0
+!
+! --- BGP Configuration (RFC 4271, RFC 6996) ---
+router bgp 65001
+ neighbor 10.200.0.1 remote-as 65010
+ network 10.100.0.0 mask 255.255.0.0
+!
+! --- IPsec VPN Configuration (RFC 4301) ---
+crypto isakmp policy 10
+ encr aes 256
+ authentication pre-share
+ group 14
+!
+crypto isakmp key CHANGE_ME_BEFORE_DEPLOYMENT address 10.200.0.1
+!
+crypto ipsec transform-set IPSEC-TS esp-aes 256 esp-sha256-hmac
+ mode tunnel
+!
+ip access-list extended IPSEC-INTERESTING
+ remark Interesting traffic for IPsec tunnel
+ permit ip 10.100.0.0 0.0.255.255 10.200.0.0 0.0.255.255
+!
+crypto map IPSEC-MAP 10 ipsec-isakmp
+ set peer 10.200.0.1
+ set transform-set IPSEC-TS
+ match address IPSEC-INTERESTING
+!
+interface GigabitEthernet0/1
+ crypto map IPSEC-MAP
+!
+end

@@ -1,0 +1,73 @@
+! ===== DEVICE: RTR-BRANCH-WEST =====
+!
+hostname RTR-BRANCH-WEST
+no ip domain-lookup
+!
+! --- VLAN Configuration (IEEE 802.1Q) ---
+vlan 40
+ name West-Branch-Users
+vlan 999
+ name NATIVE
+!
+! --- Spanning Tree (IEEE 802.1w RSTP) ---
+spanning-tree mode rapid-pvst
+!
+! --- Layer 3 Routing ---
+ip routing
+!
+! --- Access Ports ---
+interface GigabitEthernet1/0/41
+ description West-Branch-Users access
+ switchport mode access
+ switchport access vlan 40
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+! --- Routed Point-to-Point Ports ---
+interface GigabitEthernet0/1
+ description P2P to FinTech-HQ
+ no switchport
+ ip address 172.16.2.138 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/2
+ description P2P to Branch-East
+ no switchport
+ ip address 172.16.2.130 255.255.255.252
+ no shutdown
+!
+! --- Loopback Interfaces ---
+interface Loopback0
+ description Router-ID RTR-BRANCH-WEST
+ ip address 172.16.2.141 255.255.255.255
+ no shutdown
+!
+! --- Dot1Q Subinterfaces (Metro EVPL handoff) ---
+interface GigabitEthernet0/1.40
+ description EVPL West-Branch-Users
+ encapsulation dot1Q 40
+ ip address 172.16.2.1 255.255.255.128
+ no shutdown
+!
+! --- OSPF Configuration (RFC 2328) ---
+router ospf 1
+ router-id 172.16.2.141
+ network 172.16.2.0 0.0.0.127 area 0
+ network 172.16.2.136 0.0.0.3 area 0
+ network 172.16.2.128 0.0.0.3 area 0
+ network 172.16.2.141 0.0.0.0 area 0
+ passive-interface GigabitEthernet0/1.40
+!
+! --- QoS Configuration (Metro) ---
+class-map match-all VOICE-CLASS
+ match dscp ef
+!
+policy-map QOS-POLICY
+ class VOICE-CLASS
+  priority percent 30
+!
+interface GigabitEthernet0/1
+ service-policy output QOS-POLICY
+!
+end

@@ -1,0 +1,61 @@
+! ===== DEVICE: DIST-RESI =====
+!
+hostname DIST-RESI
+no ip domain-lookup
+!
+! --- VLAN Configuration (IEEE 802.1Q) ---
+vlan 80
+ name Student-Dorms
+vlan 999
+ name NATIVE
+!
+! --- Spanning Tree (IEEE 802.1w RSTP) ---
+spanning-tree mode rapid-pvst
+!
+! --- Layer 3 Routing ---
+ip routing
+!
+! --- SVI Interfaces ---
+interface Vlan80
+ description Student-Dorms SVI
+ ip address 10.10.0.1 255.255.252.0
+ no shutdown
+!
+! --- Access Ports ---
+interface GigabitEthernet1/0/33
+ description Student-Dorms access
+ switchport mode access
+ switchport access vlan 80
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+! --- Routed Point-to-Point Ports ---
+interface GigabitEthernet0/1
+ description P2P to Admin-Hall
+ no switchport
+ ip address 10.10.9.34 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/2
+ description P2P to Science-Complex
+ no switchport
+ ip address 10.10.9.42 255.255.255.252
+ no shutdown
+!
+! --- Loopback Interfaces ---
+interface Loopback0
+ description Router-ID DIST-RESI
+ ip address 10.10.9.45 255.255.255.255
+ no shutdown
+!
+! --- OSPF Configuration (RFC 2328) ---
+router ospf 1
+ router-id 10.10.9.45
+ network 10.10.0.0 0.0.3.255 area 0
+ network 10.10.9.32 0.0.0.3 area 0
+ network 10.10.9.40 0.0.0.3 area 0
+ network 10.10.9.45 0.0.0.0 area 0
+ passive-interface Vlan80
+!
+end

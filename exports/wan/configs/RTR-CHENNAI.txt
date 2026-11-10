@@ -1,0 +1,88 @@
+! ===== DEVICE: RTR-CHENNAI =====
+!
+hostname RTR-CHENNAI
+no ip domain-lookup
+!
+! --- VLAN Configuration (IEEE 802.1Q) ---
+vlan 401
+ name Chennai-IoT-Scanners
+vlan 402
+ name Chennai-Servers
+vlan 403
+ name Chennai-Mgmt
+vlan 999
+ name NATIVE
+!
+! --- Spanning Tree (IEEE 802.1w RSTP) ---
+spanning-tree mode rapid-pvst
+!
+! --- Layer 3 Routing ---
+ip routing
+!
+! --- SVI Interfaces ---
+interface Vlan401
+ description Chennai-IoT-Scanners SVI
+ ip address 10.100.8.1 255.255.254.0
+ no shutdown
+!
+interface Vlan402
+ description Chennai-Servers SVI
+ ip address 10.100.10.33 255.255.255.224
+ no shutdown
+!
+interface Vlan403
+ description Chennai-Mgmt SVI
+ ip address 10.100.10.1 255.255.255.224
+ no shutdown
+!
+! --- Access Ports ---
+interface GigabitEthernet1/0/18
+ description Chennai-IoT-Scanners access
+ switchport mode access
+ switchport access vlan 401
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/19
+ description Chennai-Servers access
+ switchport mode access
+ switchport access vlan 402
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface GigabitEthernet1/0/20
+ description Chennai-Mgmt access
+ switchport mode access
+ switchport access vlan 403
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+! --- Routed Point-to-Point Ports ---
+interface GigabitEthernet0/1
+ description P2P to Delhi-Hub
+ no switchport
+ ip address 10.100.20.3 255.255.255.254
+ no shutdown
+!
+! --- Loopback Interfaces ---
+interface Loopback0
+ description Router-ID RTR-CHENNAI
+ ip address 10.100.20.7 255.255.255.255
+ no shutdown
+!
+! --- OSPF Configuration (RFC 2328) ---
+router ospf 1
+ router-id 10.100.20.7
+ network 10.100.8.0 0.0.1.255 area 3
+ network 10.100.10.32 0.0.0.31 area 3
+ network 10.100.10.0 0.0.0.31 area 3
+ network 10.100.20.2 0.0.0.1 area 0
+ network 10.100.20.7 0.0.0.0 area 3
+ passive-interface Vlan401
+ passive-interface Vlan402
+ passive-interface Vlan403
+!
+end

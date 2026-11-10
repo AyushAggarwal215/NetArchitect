@@ -1,0 +1,50 @@
+{
+  "profile": "wan",
+  "rootPrefix": "10.100.0.0/16",
+  "resiliency": false,
+  "cloud": {
+    "name": "AWS-Transit-VPC",
+    "region": "ap-south-1",
+    "prefix": "10.200.0.0/16",
+    "gatewayName": "VGW-AWS-HUB",
+    "asn": 65010,
+    "connectedTo": "Delhi-Hub"
+  },
+  "totalDecisions": 41,
+  "totalSubnets": 19,
+  "totalHostsRequested": 2210,
+  "totalUsableAddresses": 2802,
+  "efficiencyPercent": 78.9,
+  "links": [
+    {
+      "name": "Delhi-Hub-Mumbai-Logistics",
+      "distanceM": 1150000,
+      "media": "Carrier WAN Circuit",
+      "standard": "Carrier Ethernet / IPsec",
+      "transceiver": null,
+      "marginDb": null,
+      "propagationDelayUs": 5750,
+      "wanCircuit": true
+    },
+    {
+      "name": "Delhi-Hub-Bengaluru-TechCenter",
+      "distanceM": 1750000,
+      "media": "Carrier WAN Circuit",
+      "standard": "Carrier Ethernet / IPsec",
+      "transceiver": null,
+      "marginDb": null,
+      "propagationDelayUs": 8750,
+      "wanCircuit": true
+    },
+    {
+      "name": "Delhi-Hub-Chennai-Terminal",
+      "distanceM": 1760000,
+      "media": "Carrier WAN Circuit",
+      "standard": "Carrier Ethernet / IPsec",
+      "transceiver": null,
+      "marginDb": null,
+      "propagationDelayUs": 8800,
+      "wanCircuit": true
+    }
+  ]
+}
