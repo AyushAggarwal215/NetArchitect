@@ -1,28 +1,130 @@
-# Dependencies
+# ==========================================
+# DEPENDENCIES
+# ==========================================
 node_modules/
+.pnp/
+.pnp.js
 package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
-# Logs
+# ==========================================
+# ENVIRONMENT VARIABLES / SECRETS
+# ==========================================
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# ==========================================
+# LOGS
+# ==========================================
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Byte-compiled / optimized / DLL files
+# ==========================================
+# BUILD / ARTIFACTS / COVERAGE
+# ==========================================
+/dist/
+/build/
+/.tmp/
+/.temp/
+/.cache/
+/.parcel-cache/
+/.vite/
+/.turbo/
+/coverage/
+/.nyc_output/
+
+# ==========================================
+# PYTHON (LEGACY / SCRIPTS)
+# ==========================================
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Pytest / coverage
+*.pyd
+.Python
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 .coverage
+.coverage.*
 htmlcov/
-
-# Virtual environments
+.tox/
+.nox/
 .venv/
-env/
 venv/
+env/
 ENV/
+pip-wheel-metadata/
+*.egg-info/
+wheels/
 
-# OS-generated files
+# ==========================================
+# GENERATED NETWORK CLI OUTPUTS
+# ==========================================
+# Anchored to root so src/output and tests/output are never excluded.
+/out/
+/output/
+/outputs/
+/generated/
+/generated-output/
+
+!/exports/
+
+# ==========================================
+# TEMPORARY / BACKUP / CRASH DUMPS
+# ==========================================
+*.bak
+*.bak~
+*.tmp
+*.temp
+*.dump
+*.stackdump
+*.swp
+*.un~
+*.orig
+*.rej
+*.patch
+*.diff
+*.old
+*.backup
+*.pkt.autosave
+*.gns3.autosave
+
+# ==========================================
+# EDITORS / IDEs
+# ==========================================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.code-workspace
+
+# ==========================================
+# OPERATING SYSTEM
+# ==========================================
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
+Thumbs.db:encryptable
+Desktop.ini
+ehthumbs.db
+ehthumbs_vista.db

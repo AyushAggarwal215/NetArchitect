@@ -3,9 +3,13 @@
   "version": "2.0.0",
   "description": "Deterministic Network Design Engine & Cisco IOS Configuration Generator for CIC-307",
   "type": "module",
+  "main": "src/cli/index.js",
+  "bin": {
+    "netarchitect": "./src/cli/index.js"
+  },
   "scripts": {
-    "test": "npm test --prefix NetArchitect",
-    "start": "npm start --prefix NetArchitect"
+    "test": "node --test",
+    "start": "node src/cli/index.js"
   },
   "engines": {
     "node": ">=20.0.0"

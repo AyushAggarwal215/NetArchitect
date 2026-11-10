@@ -33,7 +33,7 @@ describe("Command-Line Interface Integration Tests", () => {
     const { stdout } = await execFileAsync("node", [CLI_PATH, "run", "--preset", "campus", "--out", tmpOut]);
     assert.ok(stdout.includes("CAMPUS Network Architecture"));
     assert.ok(stdout.includes("Subnet Allocation Summary:"));
-    assert.ok(stdout.includes("CORE-A"));
+    assert.ok(stdout.includes("CORE-ADMIN"));
     assert.ok(fs.existsSync(path.join(tmpOut, "campus", "full_config.txt")));
     fs.rmSync(tmpOut, { recursive: true, force: true });
   });

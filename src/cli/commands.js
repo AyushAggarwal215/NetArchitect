@@ -5,6 +5,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { normalizeScenarioData } from "../core/validation.js";
 import { selectMedia } from "../engines/media.js";
 import { allocateVlsm, allocateHierarchical } from "../engines/vlsm.js";
@@ -12,6 +13,9 @@ import { selectRouting } from "../engines/routing.js";
 import { generateAllConfigs } from "../config/generator.js";
 import { exportAll } from "../output/exporter.js";
 import { InvalidParameterError } from "../core/errors.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * List available built-in preset scenarios.
@@ -44,10 +48,10 @@ export function loadPresetScenario(presetName) {
     );
   }
 
-  // Look in root presets/ directory or relative to module root
+  // Look relative to module directory or current working directory presets/
   const candidatePaths = [
-    path.resolve("presets", `${presetName}.json`),
-    path.join(path.dirname(import.meta.url.replace(/^file:\/\/\/?/, "")), "..", "..", "presets", `${presetName}.json`)
+    path.resolve(__dirname, "../../presets", `${presetName}.json`),
+    path.resolve("presets", `${presetName}.json`)
   ];
 
   let rawContent = null;

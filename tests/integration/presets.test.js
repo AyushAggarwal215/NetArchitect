@@ -8,8 +8,8 @@ import { IPv4NetworkOracle } from "../helpers/ip-oracle.js";
 
 describe("End-to-End Presets Integration Verification", () => {
   const presets = [
-    { name: "campus", expectedDevices: ["CORE-A", "DIST-B", "DIST-C"], minSubnets: 11 },
-    { name: "metro", expectedDevices: ["RTR-HQ", "RTR-R1", "RTR-R2"], minSubnets: 7 },
+    { name: "campus", expectedDevices: ["CORE-ADMIN", "DIST-SCIENCE", "DIST-RESI"], minSubnets: 11 },
+    { name: "metro", expectedDevices: ["RTR-FINTECH-HQ", "RTR-BRANCH-EAST", "RTR-BRANCH-WEST"], minSubnets: 7 },
     { name: "wan", expectedDevices: ["RTR-DELHI", "RTR-MUMBAI", "RTR-BENGALURU", "RTR-CHENNAI"], minSubnets: 15 }
   ];
 

@@ -5,6 +5,8 @@
  */
 
 import process from "node:process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import {
   listPresets,
@@ -121,12 +123,16 @@ export function main(args = process.argv.slice(2)) {
 }
 
 // Direct invocation check
-if (process.argv[1] && (
-  process.argv[1].endsWith("src/cli/index.js") ||
-  process.argv[1].endsWith("src\\cli\\index.js") ||
-  process.argv[1].endsWith("bin/netarchitect.js") ||
-  process.argv[1].endsWith("bin\\netarchitect.js")
-)) {
+const __filename = fileURLToPath(import.meta.url);
+const invokedPath = process.argv[1] ? path.resolve(process.argv[1]) : "";
+const isDirectCall = Boolean(
+  invokedPath && (
+    invokedPath === __filename ||
+    path.basename(invokedPath, path.extname(invokedPath)) === "netarchitect"
+  )
+);
+
+if (isDirectCall) {
   const exitCode = main(process.argv.slice(2));
   process.exit(exitCode);
 }

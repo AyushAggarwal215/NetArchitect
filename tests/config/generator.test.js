@@ -58,9 +58,9 @@ describe("Cisco IOS Configuration Generator & Compliance", () => {
     const { scenario, allocations, configs } = runPipelineForPreset("campus");
 
     assert.equal(Object.keys(configs).length, 3);
-    assert.ok(configs["CORE-A"]);
-    assert.ok(configs["DIST-B"]);
-    assert.ok(configs["DIST-C"]);
+    assert.ok(configs["CORE-ADMIN"]);
+    assert.ok(configs["DIST-SCIENCE"]);
+    assert.ok(configs["DIST-RESI"]);
 
     // Allowlist check
     for (const [hostname, text] of Object.entries(configs)) {
@@ -74,7 +74,7 @@ describe("Cisco IOS Configuration Generator & Compliance", () => {
     }
 
     // Security assertions
-    const coreText = configs["CORE-A"];
+    const coreText = configs["CORE-ADMIN"];
     assert.ok(coreText.includes("spanning-tree mode rapid-pvst"));
     assert.ok(coreText.includes("spanning-tree vlan 10 priority 4096"));
     assert.ok(coreText.includes("vlan 999"));
@@ -92,9 +92,9 @@ describe("Cisco IOS Configuration Generator & Compliance", () => {
   test("Metro preset configs include EVPL subinterfaces and QoS policy", () => {
     const { configs } = runPipelineForPreset("metro");
     assert.equal(Object.keys(configs).length, 3);
-    assert.ok(configs["RTR-HQ"]);
+    assert.ok(configs["RTR-FINTECH-HQ"]);
 
-    const hqText = configs["RTR-HQ"];
+    const hqText = configs["RTR-FINTECH-HQ"];
     assert.ok(hqText.includes("class-map match-all VOICE-CLASS"));
     assert.ok(hqText.includes("match dscp ef"));
     assert.ok(hqText.includes("policy-map QOS-POLICY"));
