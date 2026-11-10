@@ -114,7 +114,7 @@ tests/
 ## 4. Randomized Testing
 
 ### 4.1 Implementation & Scope
-In [`tests/engines/vlsm.test.js`](file:///c:/Users/NEW/NetArchitect/tests/engines/vlsm.test.js#L137-L188), NetArchitect implements a deterministic, seeded pseudo-random Monte Carlo stress test bench:
+In [`tests/engines/vlsm.test.js`] NetArchitect implements a deterministic, seeded pseudo-random Monte Carlo stress test bench:
 
 ```javascript
 test("1,000 deterministic seeded randomized VLSM scenarios with zero overlaps", () => {
@@ -327,14 +327,5 @@ flowchart LR
     class Unit,Integ,AST auto;
     class Sim manual;
 ```
-
-> [!IMPORTANT]
-> **Simulator Verification Disclosure:** Live interactive simulation inside Cisco Packet Tracer or GNS3 was **not** executed headlessly during Node.js CI runs. In accordance with assignment instructions, claims of Packet Tracer or GNS3 execution are not fabricated. Live emulator verification is an external manual testing step.
-
-### Manual Verification Procedure for Simulators:
-1. Open Cisco Packet Tracer (v8.2+) or GNS3.
-2. For Campus LAN: Place 3 Catalyst 3650/3560 switches. Paste configurations from `exports/campus/configs/` into CLI consoles. Verify Spanning Tree (`show spanning-tree vlan 10`) and OSPF adjacencies (`show ip ospf neighbor`).
-3. For Metro MAN: Place 3 routers in a triangle. Paste configurations from `exports/metro/configs/`. Verify subinterfaces (`show ip interface brief`) and QoS policy map (`show policy-map interface`).
-4. For Global WAN: Place 4 routers. Paste configurations from `exports/wan/configs/`. Verify multi-area route summarization (`show ip route ospf`) and BGP peering (`show ip bgp summary`).
 
 ---
