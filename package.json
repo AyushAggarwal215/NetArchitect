@@ -1,0 +1,15 @@
+{
+  "name": "netarchitect",
+  "version": "2.0.0",
+  "description": "Deterministic Network Design Engine & Cisco IOS Configuration Generator for CIC-307",
+  "type": "module",
+  "scripts": {
+    "test": "npm test --prefix NetArchitect",
+    "start": "npm start --prefix NetArchitect"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "Yojit",
+  "license": "MIT"
+}

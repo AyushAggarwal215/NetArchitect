@@ -38,6 +38,8 @@ export const IOS_COMMAND_PREFIXES = [
   "shutdown",
   "switchport ",
   "encapsulation ",
+  "power inline ",
+  "power ",
 
   // Layer 3 — OSPF (RFC 2328)
   "router ospf",

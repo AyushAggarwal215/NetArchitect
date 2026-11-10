@@ -18,10 +18,10 @@ import { InvalidParameterError } from "../core/errors.js";
  */
 export function listPresets() {
   console.log("NetArchitect — Available Built-in Presets (CIC-307)");
-  console.log("=".repeat(65));
-  console.log("  1. campus   — Enterprise Multi-Building Campus LAN (1,600 hosts, OSPF Area 0)");
-  console.log("  2. metro    — High-Speed Metro Area Network (550 hosts, SMF, EVPL, QoS < 5ms)");
-  console.log("  3. wan      — Pan-India Enterprise Multi-Cloud WAN (2,200+ hosts, OSPF + eBGP + IPsec)");
+  console.log("=".repeat(75));
+  console.log("  1. campus   — St. Jude University Campus LAN (1,600 endpoints, OM4/Cat6a, PoE, RSTP, OSPF Area 0)");
+  console.log("  2. metro    — Apex Financial Metro MAN (450 users + 100 colo servers, OS2 SMF, EVPL, QoS, Dual-Homed)");
+  console.log("  3. wan      — TransGlobal Logistics WAN (2,000 IoT + 200 srv/mgmt, 4 Cities + AWS VPC, OSPF/BGP/IPsec)");
   console.log("");
   console.log("Usage examples:");
   console.log("  node src/cli/index.js run --preset campus");

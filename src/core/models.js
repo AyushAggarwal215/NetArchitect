@@ -107,6 +107,7 @@ export class Scenario {
    * @param {Link[]} params.links
    * @param {Vlan[]} params.vlans
    * @param {boolean} [params.resiliency]
+   * @param {Object|null} [params.cloud]
    * @param {Object} [params.extras]
    */
   constructor({
@@ -116,6 +117,7 @@ export class Scenario {
     links = [],
     vlans = [],
     resiliency = false,
+    cloud = null,
     extras = {}
   }) {
     this.profile = profile;
@@ -124,6 +126,7 @@ export class Scenario {
     this.links = links.map(l => (l instanceof Link ? l : new Link(l)));
     this.vlans = vlans.map(v => (v instanceof Vlan ? v : new Vlan(v)));
     this.resiliency = Boolean(resiliency);
+    this.cloud = cloud || extras?.cloud || null;
     this.extras = extras || {};
   }
 }

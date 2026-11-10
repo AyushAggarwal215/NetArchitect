@@ -1,0 +1,152 @@
+{
+  "profile": "wan",
+  "root_prefix": "10.100.0.0/16",
+  "resiliency": false,
+  "sites": [
+    {
+      "name": "Delhi-Hub",
+      "devices": [
+        {
+          "name": "RTR-DELHI",
+          "type": "router"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "name": "Mumbai-Logistics",
+      "devices": [
+        {
+          "name": "RTR-MUMBAI",
+          "type": "router"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "name": "Bengaluru-TechCenter",
+      "devices": [
+        {
+          "name": "RTR-BENGALURU",
+          "type": "router"
+        }
+      ],
+      "area": 2
+    },
+    {
+      "name": "Chennai-Terminal",
+      "devices": [
+        {
+          "name": "RTR-CHENNAI",
+          "type": "router"
+        }
+      ],
+      "area": 3
+    }
+  ],
+  "links": [
+    {
+      "a": "Delhi-Hub",
+      "b": "Mumbai-Logistics",
+      "distance_m": 1150000
+    },
+    {
+      "a": "Delhi-Hub",
+      "b": "Bengaluru-TechCenter",
+      "distance_m": 1750000
+    },
+    {
+      "a": "Delhi-Hub",
+      "b": "Chennai-Terminal",
+      "distance_m": 1760000
+    }
+  ],
+  "cloud": {
+    "name": "AWS-Transit-VPC",
+    "region": "ap-south-1",
+    "prefix": "10.200.0.0/16",
+    "gateway_name": "VGW-AWS-HUB",
+    "gateway_ip": "10.200.0.1",
+    "asn": 65010,
+    "connected_to": "Delhi-Hub",
+    "connection_type": "ipsec_ebgp"
+  },
+  "vlans": [
+    {
+      "id": 101,
+      "name": "Delhi-IoT-Scanners",
+      "hosts": 800,
+      "site": "Delhi-Hub"
+    },
+    {
+      "id": 102,
+      "name": "Delhi-Servers",
+      "hosts": 20,
+      "site": "Delhi-Hub"
+    },
+    {
+      "id": 103,
+      "name": "Delhi-Mgmt",
+      "hosts": 30,
+      "site": "Delhi-Hub"
+    },
+    {
+      "id": 201,
+      "name": "Mumbai-IoT-Scanners",
+      "hosts": 500,
+      "site": "Mumbai-Logistics"
+    },
+    {
+      "id": 202,
+      "name": "Mumbai-Servers",
+      "hosts": 20,
+      "site": "Mumbai-Logistics"
+    },
+    {
+      "id": 203,
+      "name": "Mumbai-Mgmt",
+      "hosts": 30,
+      "site": "Mumbai-Logistics"
+    },
+    {
+      "id": 301,
+      "name": "Bengaluru-IoT-Scanners",
+      "hosts": 400,
+      "site": "Bengaluru-TechCenter"
+    },
+    {
+      "id": 302,
+      "name": "Bengaluru-Servers",
+      "hosts": 20,
+      "site": "Bengaluru-TechCenter"
+    },
+    {
+      "id": 303,
+      "name": "Bengaluru-Mgmt",
+      "hosts": 30,
+      "site": "Bengaluru-TechCenter"
+    },
+    {
+      "id": 401,
+      "name": "Chennai-IoT-Scanners",
+      "hosts": 300,
+      "site": "Chennai-Terminal"
+    },
+    {
+      "id": 402,
+      "name": "Chennai-Servers",
+      "hosts": 20,
+      "site": "Chennai-Terminal"
+    },
+    {
+      "id": 403,
+      "name": "Chennai-Mgmt",
+      "hosts": 30,
+      "site": "Chennai-Terminal"
+    }
+  ],
+  "extras": {
+    "cloud_prefix": "10.200.0.0/16",
+    "allow_slash31": true
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "profile": "metro",
+  "root_prefix": "172.16.0.0/16",
+  "resiliency": true,
+  "sites": [
+    {
+      "name": "FinTech-HQ",
+      "devices": [
+        {
+          "name": "RTR-FINTECH-HQ",
+          "type": "router"
+        }
+      ]
+    },
+    {
+      "name": "Branch-East",
+      "devices": [
+        {
+          "name": "RTR-BRANCH-EAST",
+          "type": "router"
+        }
+      ]
+    },
+    {
+      "name": "Branch-West",
+      "devices": [
+        {
+          "name": "RTR-BRANCH-WEST",
+          "type": "router"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "a": "FinTech-HQ",
+      "b": "Branch-East",
+      "distance_m": 18500
+    },
+    {
+      "a": "FinTech-HQ",
+      "b": "Branch-West",
+      "distance_m": 32000
+    },
+    {
+      "a": "Branch-East",
+      "b": "Branch-West",
+      "distance_m": 24000
+    }
+  ],
+  "vlans": [
+    {
+      "id": 10,
+      "name": "HQ-Trading-Users",
+      "hosts": 250,
+      "site": "FinTech-HQ"
+    },
+    {
+      "id": 20,
+      "name": "Colo-Trading-Servers",
+      "hosts": 100,
+      "site": "FinTech-HQ"
+    },
+    {
+      "id": 30,
+      "name": "East-Branch-Users",
+      "hosts": 120,
+      "site": "Branch-East"
+    },
+    {
+      "id": 40,
+      "name": "West-Branch-Users",
+      "hosts": 80,
+      "site": "Branch-West"
+    }
+  ],
+  "extras": {
+    "qos_target_ms": 5,
+    "qos_voice_priority_percent": 30
+  }
+}

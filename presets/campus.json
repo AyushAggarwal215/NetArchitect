@@ -1,0 +1,111 @@
+{
+  "profile": "campus",
+  "root_prefix": "10.10.0.0/16",
+  "resiliency": true,
+  "sites": [
+    {
+      "name": "Admin-Hall",
+      "devices": [
+        {
+          "name": "CORE-ADMIN",
+          "type": "l3_switch",
+          "supports_isl": false
+        }
+      ],
+      "area": 0
+    },
+    {
+      "name": "Science-Complex",
+      "devices": [
+        {
+          "name": "DIST-SCIENCE",
+          "type": "l3_switch",
+          "supports_isl": false
+        }
+      ],
+      "area": 0
+    },
+    {
+      "name": "Residential-Quad",
+      "devices": [
+        {
+          "name": "DIST-RESI",
+          "type": "l3_switch",
+          "supports_isl": false
+        }
+      ],
+      "area": 0
+    }
+  ],
+  "links": [
+    {
+      "a": "Admin-Hall",
+      "b": "Science-Complex",
+      "distance_m": 180
+    },
+    {
+      "a": "Admin-Hall",
+      "b": "Residential-Quad",
+      "distance_m": 360
+    },
+    {
+      "a": "Science-Complex",
+      "b": "Residential-Quad",
+      "distance_m": 250
+    }
+  ],
+  "vlans": [
+    {
+      "id": 10,
+      "name": "Admin-Staff",
+      "hosts": 200,
+      "site": "Admin-Hall"
+    },
+    {
+      "id": 20,
+      "name": "DataCenter-Servers",
+      "hosts": 60,
+      "site": "Admin-Hall"
+    },
+    {
+      "id": 30,
+      "name": "Network-Mgmt",
+      "hosts": 40,
+      "site": "Admin-Hall"
+    },
+    {
+      "id": 40,
+      "name": "CCTV-Security",
+      "hosts": 30,
+      "site": "Admin-Hall"
+    },
+    {
+      "id": 50,
+      "name": "Faculty-Offices",
+      "hosts": 250,
+      "site": "Science-Complex"
+    },
+    {
+      "id": 60,
+      "name": "Research-Labs",
+      "hosts": 300,
+      "site": "Science-Complex"
+    },
+    {
+      "id": 70,
+      "name": "Campus-Wi-Fi-APs",
+      "hosts": 120,
+      "site": "Science-Complex",
+      "poe": true
+    },
+    {
+      "id": 80,
+      "name": "Student-Dorms",
+      "hosts": 600,
+      "site": "Residential-Quad"
+    }
+  ],
+  "extras": {
+    "access_run_max_m": 90
+  }
+}

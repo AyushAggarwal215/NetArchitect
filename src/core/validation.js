@@ -4,7 +4,13 @@
  */
 
 import { InvalidParameterError } from "./errors.js";
-import { parseCidr, isRfc1918 } from "../utils/ip-address.js";
+import {
+  parseCidr,
+  isRfc1918,
+  subnetsOverlap,
+  prefixToMaskBigInt,
+  maskToWildcardBigInt
+} from "../utils/ip-address.js";
 import {
   VLAN_MIN,
   VLAN_MAX,
@@ -162,13 +168,46 @@ export function validateScenario(scenario) {
     }
   }
 
-  // 7. Cloud Prefix validation (if present)
-  if (scenario.extras && scenario.extras.cloud_prefix) {
-    const cp = scenario.extras.cloud_prefix;
-    const { ip: cpIp } = parseCidr(cp);
+  // 7. Cloud VPC & Prefix validation (if present)
+  const cloudObj = scenario.cloud || (scenario.extras && scenario.extras.cloud);
+  const cloudPrefix = cloudObj?.prefix || (scenario.extras && scenario.extras.cloud_prefix);
+
+  if (cloudPrefix) {
+    if (typeof cloudPrefix !== "string") {
+      throw new InvalidParameterError("Cloud prefix must be a CIDR string.");
+    }
+    const { ip: cpIp, prefixLen: cpPlen, networkBigInt: cpNet } = parseCidr(cloudPrefix);
     if (!isRfc1918(cpIp)) {
       throw new InvalidParameterError(
-        `Cloud VPC prefix '${cp}' is not within RFC 1918 private address space.`
+        `Cloud VPC prefix '${cloudPrefix}' is not within RFC 1918 private address space.`
+      );
+    }
+
+    // Verify Enterprise root prefix and Cloud prefix do NOT overlap
+    const cpMask = prefixToMaskBigInt(cpPlen);
+    const cpWildcard = maskToWildcardBigInt(cpMask);
+    const cpBcast = cpNet | cpWildcard;
+
+    const { prefixLen: rpPlen, networkBigInt: rpNet } = parseCidr(scenario.rootPrefix);
+    const rpMask = prefixToMaskBigInt(rpPlen);
+    const rpWildcard = maskToWildcardBigInt(rpMask);
+    const rpBcast = rpNet | rpWildcard;
+
+    if (subnetsOverlap(rpNet, rpBcast, cpNet, cpBcast)) {
+      throw new InvalidParameterError(
+        `Cloud VPC prefix '${cloudPrefix}' overlaps with enterprise root prefix '${scenario.rootPrefix}'. ` +
+        `Subnet collision between enterprise and cloud routing domains is prohibited.`
+      );
+    }
+  }
+
+  if (cloudObj) {
+    if (!cloudObj.name || typeof cloudObj.name !== "string") {
+      throw new InvalidParameterError("Cloud VPC definition must include a valid 'name'.");
+    }
+    if (cloudObj.connected_to && !seenSiteNames.has(cloudObj.connected_to)) {
+      throw new InvalidParameterError(
+        `Cloud VPC '${cloudObj.name}' connected_to references unknown site '${cloudObj.connected_to}'`
       );
     }
   }
@@ -220,6 +259,8 @@ export function normalizeScenarioData(rawData) {
       }))
     : [];
 
+  const cloud = rawData.cloud || (rawData.extras && rawData.extras.cloud) || null;
+
   const scenario = new Scenario({
     profile,
     rootPrefix,
@@ -227,6 +268,7 @@ export function normalizeScenarioData(rawData) {
     links,
     vlans,
     resiliency: rawData.resiliency || false,
+    cloud,
     extras: rawData.extras || {}
   });
 

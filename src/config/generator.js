@@ -165,13 +165,14 @@ export function buildDeviceConfigs(scenario, allocations, mediaResults, routingC
       }
     }
 
-    // Build Access Ports (PortFast + BPDU Guard)
+    // Build Access Ports (PortFast + BPDU Guard + optional PoE)
     for (const vlan of localVlans) {
       const portNum = (vlan.id % 48) + 1;
       dc.accessPorts.push({
         interface: `GigabitEthernet1/0/${portNum}`,
         vlan: vlan.id,
-        description: `${vlan.name} access`
+        description: `${vlan.name} access`,
+        poe: Boolean(vlan.poe)
       });
     }
 
@@ -315,7 +316,7 @@ export function buildDeviceConfigs(scenario, allocations, mediaResults, routingC
 
     // Build IPsec VPN configuration (WAN Profile on Hub site)
     if (scenario.profile === "wan" && routingConfig.hasBgp && site.name === scenario.sites[0].name) {
-      const cloudPrefix = scenario.extras && scenario.extras.cloud_prefix;
+      const cloudPrefix = scenario.cloud?.prefix || (scenario.extras && scenario.extras.cloud_prefix);
       if (cloudPrefix) {
         const [cloudIp, cloudPlenStr] = cloudPrefix.split("/");
         const cloudPlen = Number(cloudPlenStr);
@@ -439,6 +440,9 @@ export function renderDeviceConfig(dc) {
       lines.push(` switchport access vlan ${port.vlan}`);
       lines.push(" spanning-tree portfast");
       lines.push(" spanning-tree bpduguard enable");
+      if (port.poe) {
+        lines.push(" power inline auto");
+      }
       lines.push(" no shutdown");
       lines.push("!");
     }
